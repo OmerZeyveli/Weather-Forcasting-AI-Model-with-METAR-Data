@@ -2,22 +2,7 @@
 demo/*
 
 # Allow specific folders
-!demo/input_splits/
-!demo/metar_processed/
 !demo/metar_raw/
-!demo/model_weights/
-!demo/validation_imgs/
-
-# Ignore everything inside those folders...
-demo/input_splits/**
-demo/metar_processed/**
-demo/metar_raw/**
-demo/model_weights/**
-demo/validation_imgs/**
 
 # ...except .gitkeep files (so folders aren't empty)
-!demo/input_splits/.gitkeep
-!demo/metar_processed/.gitkeep
 !demo/metar_raw/.gitkeep
-!demo/model_weights/.gitkeep
-!demo/validation_imgs/.gitkeep
