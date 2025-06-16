@@ -14,6 +14,7 @@ df = df.sort_values("datetime").reset_index(drop=True)
 # === Interpolate missing temperature and dew_point ===
 df["temperature"] = df["temperature"].interpolate(method="linear")
 df["dew_point"] = df["dew_point"].interpolate(method="linear")
+df["wind_dir"] = df["wind_dir"].interpolate(method="linear")
 
 # === Cyclical encoding ===
 df["wind_dir_sin"] = np.sin(2 * np.pi * df["wind_dir"] / 360)
@@ -47,8 +48,15 @@ df_scaled["hour_sin"] = df["hour_sin"]
 df_scaled["hour_cos"] = df["hour_cos"]
 df_scaled["month_sin"] = df["month_sin"]
 df_scaled["month_cos"] = df["month_cos"]
-
 df_scaled["datetime"] = df["datetime"]
+
+# === Scale cyclical features to [0, 1] range ===
+df_scaled["wind_dir_sin"] = (df["wind_dir_sin"] + 1) / 2  # Scale to [0, 1] range
+df_scaled["wind_dir_cos"] = (df["wind_dir_cos"] + 1) / 2  # Scale to [0, 1] range
+df_scaled["hour_sin"] = (df["hour_sin"] + 1) / 2  # Scale to [0, 1] range
+df_scaled["hour_cos"] = (df["hour_cos"] + 1) / 2  # Scale to [0, 1] range
+df_scaled["month_sin"] = (df["month_sin"] + 1) / 2  # Scale to [0, 1] range
+df_scaled["month_cos"] = (df["month_cos"] + 1) / 2  # Scale to [0, 1] range
 
 # === Define output directories ===
 scaled_data_dir = "demo/metar_processed"

@@ -24,10 +24,10 @@ for i, row in df.iterrows():
 
         # === New logic for wind direction and variability ===
         if raw_wind_dir is None:
-            wind_dir = -1
+            wind_dir = np.nan
             wind_dir_variable = 1 if "VRB" in metar_str else 0
         elif raw_wind_dir.value() is None:
-            wind_dir = -1
+            wind_dir = np.nan
             wind_dir_variable = 1
         else:
             wind_dir = raw_wind_dir.value()
