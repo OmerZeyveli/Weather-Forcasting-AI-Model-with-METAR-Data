@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
+# put your raw_metar.csv data in the demo/metar_raw/ folder
 prefix="demo/"
 
-# put your raw_metar.csv data in the demo/metar_raw/ folder
 # metar_raw should has null values for missing data
 python Parse.py ${prefix}
 python Scale.py ${prefix}
