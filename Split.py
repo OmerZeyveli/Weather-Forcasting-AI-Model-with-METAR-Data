@@ -1,25 +1,24 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
 import os
 import sys
-
+from sklearn.model_selection import train_test_split
 
 # === Parameters ===
-input_len = 168       # past n hours
-output_len = 12       # predict next m hours
-test_ratio = 0.2     # 20% for testing
-val_ratio = 0.1      # 10% of train set for validation
-prefix = sys.argv[1] # Get prefix from command line
-data_path = f"{prefix}metar_processed/scaled_metar_for_lstm.csv"
-output_dir = f"{prefix}input_splits"
+input_len = 168  # past 168 hours (7 days)
+output_len = 12  # predict next 12 hours
 
+# === Command-line arguments ===
+processed_metar_folder = sys.argv[1]
+input_splits_folder = sys.argv[2]
+test_ratio = float(sys.argv[3]) if len(sys.argv) > 3 else 0.2
+val_ratio = float(sys.argv[4]) if len(sys.argv) > 4 else 0.1
 
-# === Load Scaled Data ===
+data_path = f"{processed_metar_folder}scaled_metar_for_lstm.csv"
 df = pd.read_csv(data_path, parse_dates=["datetime"])
+os.makedirs(input_splits_folder, exist_ok=True)
 
-
-# === Define input and target features ===
+# === Features ===
 input_features = [
     "wind_dir_variable", "wind_speed", "visibility",
     "temperature", "dew_point", "pressure",
@@ -36,7 +35,6 @@ target_features = [
 X_data = df[input_features].values
 y_data = df[target_features].values
 
-
 # === Build Sequences ===
 X, y = [], []
 for i in range(len(df) - input_len - output_len + 1):
@@ -50,31 +48,41 @@ print("Full sequence set:")
 print("X:", X.shape)
 print("y:", y.shape)
 
-# === Split Train/Test ===
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=test_ratio, shuffle=False
-)
+# === If full test set only (test_ratio=1.0 and val_ratio=0), skip splitting ===
+if test_ratio == 1.0 and val_ratio == 0.0:
+    np.save(f"{input_splits_folder}/X_test.npy", X)
+    np.save(f"{input_splits_folder}/y_test.npy", y)
+    print("\nSaved entire dataset as test set.")
+    print("X_test:", X.shape)
+    print("y_test:", y.shape)
 
-# === Split Train/Validation ===
-X_train, X_val, y_train, y_val = train_test_split(
-    X_train, y_train, test_size=val_ratio, shuffle=False
-)
+else:
+    # === Split Train/Test ===
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=test_ratio, shuffle=False
+    )
 
+    # === Split Train/Validation ===
+    if val_ratio > 0:
+        X_train, X_val, y_train, y_val = train_test_split(
+            X_train, y_train, test_size=val_ratio, shuffle=False
+        )
 
-# === Save Splits ===
-os.makedirs(output_dir, exist_ok=True)
-np.save(f"{output_dir}/X_train.npy", X_train)
-np.save(f"{output_dir}/y_train.npy", y_train)
-np.save(f"{output_dir}/X_val.npy", X_val)
-np.save(f"{output_dir}/y_val.npy", y_val)
-np.save(f"{output_dir}/X_test.npy", X_test)
-np.save(f"{output_dir}/y_test.npy", y_test)
+        # Save val
+        np.save(f"{input_splits_folder}/X_val.npy", X_val)
+        np.save(f"{input_splits_folder}/y_val.npy", y_val)
 
-# === Summary ===
-print("\nFinal split shapes:")
-print("X_train:", X_train.shape)
-print("y_train:", y_train.shape)
-print("X_val  :", X_val.shape)
-print("y_val  :", y_val.shape)
-print("X_test :", X_test.shape)
-print("y_test :", y_test.shape)
+    # Save all other splits
+    np.save(f"{input_splits_folder}/X_train.npy", X_train)
+    np.save(f"{input_splits_folder}/y_train.npy", y_train)
+    np.save(f"{input_splits_folder}/X_test.npy", X_test)
+    np.save(f"{input_splits_folder}/y_test.npy", y_test)
+
+    print("\nFinal split shapes:")
+    print("X_train:", X_train.shape)
+    print("y_train:", y_train.shape)
+    if val_ratio > 0:
+        print("X_val  :", X_val.shape)
+        print("y_val  :", y_val.shape)
+    print("X_test :", X_test.shape)
+    print("y_test :", y_test.shape)

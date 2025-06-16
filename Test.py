@@ -9,10 +9,13 @@ def reconstruct_deg(sin_val, cos_val):
     return np.mod(angle, 360)
 
 # === Load Data ===
-prefix = sys.argv[1]  # e.g., "demo/"
-model = load_model(f"{prefix}model_weights/lstm_weather_model.keras")
-X_test = np.load(f"{prefix}input_splits/X_test.npy")
-y_test = np.load(f"{prefix}input_splits/y_test.npy")
+model_weights_folder = sys.argv[1] # Get model weights folder from command line
+input_splits_folder = sys.argv[2] # Get input splits folder from command line
+metar_processed_folder = sys.argv[3] # Get metar_processed folder for scaler
+
+model = load_model(f"{model_weights_folder}lstm_weather_model.keras")
+X_test = np.load(f"{input_splits_folder}X_test.npy")
+y_test = np.load(f"{input_splits_folder}y_test.npy")
 
 # === Predict ===
 y_pred = model.predict(X_test)
@@ -25,7 +28,7 @@ y_pred = y_pred.reshape((n_samples, n_outputs, n_features))
 y_test = y_test.reshape((n_samples, n_outputs, n_features))
 
 # === Load Scaler ===
-scaler = joblib.load(f"{prefix}model_weights/scaler.save")
+scaler = joblib.load(f"{metar_processed_folder}scaler.save") # Changed model_weights_folder to metar_processed_folder
 
 # === Fix feature order to match scaler ===
 # Scaler was trained on: 
@@ -54,4 +57,5 @@ feature_names = ["wind_dir_variable", "wind_speed", "visibility", "temperature",
 print("\nPer-Feature MAE (original scale):")
 for i, name in enumerate(feature_names):
     mae = mean_absolute_error(y_test_scaled[:, :, i], y_pred_scaled[:, :, i])
+    print(f"{name:20s} MAE: {mae:.4f}")
     print(f"{name:20s} MAE: {mae:.4f}")

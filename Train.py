@@ -10,8 +10,10 @@ from tensorflow.keras.callbacks import EarlyStopping
 
 
 # === Load Data ===
-prefix = sys.argv[1]  # Get prefix from command line
-data_path = f"{prefix}input_splits/"
+input_splits_folder = sys.argv[1] # Get input splits folder from command line
+model_weights_folder = sys.argv[2] # Get model weights folder from command line
+
+data_path = input_splits_folder
 
 X_train = np.load(f"{data_path}/X_train.npy")
 X_val = np.load(f"{data_path}/X_val.npy")
@@ -44,8 +46,7 @@ history = model.fit(
 
 
 # === Save Model ===
-model_output_dir = f"{prefix}model_weights"
-os.makedirs(model_output_dir, exist_ok=True)
+model_output_dir = model_weights_folder
 model.save(f"{model_output_dir}/lstm_weather_model.keras")
 
 

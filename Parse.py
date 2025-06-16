@@ -5,8 +5,10 @@ import os
 import sys
 
 # Load your CSV
-prefix = sys.argv[1]  # Get prefix from command line
-df = pd.read_csv(f"{prefix}metar_raw/raw_metar.csv") # Expecting a file with nulls as empty data
+raw_metar_folder = sys.argv[1] # Get raw metar folder from command line
+processed_metar_folder = sys.argv[2] # Get processed metar folder from command line
+
+df = pd.read_csv(f"{raw_metar_folder}raw_metar.csv") # Expecting a file with nulls as empty data
 
 # Storage for processed rows
 parsed_data = []
@@ -63,7 +65,8 @@ df_parsed = pd.DataFrame(parsed_data)
 df_parsed = df_parsed.sort_values("datetime").reset_index(drop=True)
 
 # Save to CSV
-output_dir = f"{prefix}metar_processed"
-os.makedirs(output_dir, exist_ok=True)
+output_dir = processed_metar_folder
 df_parsed.to_csv(f"{output_dir}/processed_metar_for_lstm.csv", index=False)
+print(df_parsed.head())
+print(df_parsed.head())
 print(df_parsed.head())

@@ -9,10 +9,12 @@ def reconstruct_deg(sin_val, cos_val):
     return np.mod(angle, 360)
 
 # === Load Data ===
-prefix = sys.argv[1]  # e.g., "demo/"
-model = load_model(f"{prefix}model_weights/lstm_weather_model.keras")
-X_test = np.load(f"{prefix}input_splits/X_test.npy")
-y_test = np.load(f"{prefix}input_splits/y_test.npy")
+model_weights_folder = sys.argv[1] # Get model weights folder from command line
+input_splits_folder = sys.argv[2] # Get input splits folder from command line
+
+model = load_model(f"{model_weights_folder}lstm_weather_model.keras")
+X_test = np.load(f"{input_splits_folder}X_test.npy")
+y_test = np.load(f"{input_splits_folder}y_test.npy")
 
 # === Predict ===
 y_pred = model.predict(X_test)

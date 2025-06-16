@@ -7,8 +7,9 @@ import os
 import sys
 
 # === Load your processed METAR file ===
-prefix = sys.argv[1] # Get prefix from command line
-df = pd.read_csv(f"{prefix}metar_processed/processed_metar_for_lstm.csv", parse_dates=["datetime"])
+processed_metar_folder = sys.argv[1] # Get processed metar folder from command line
+
+df = pd.read_csv(f"{processed_metar_folder}processed_metar_for_lstm.csv", parse_dates=["datetime"])
 
 # === Sort by datetime (just in case) ===
 df = df.sort_values("datetime").reset_index(drop=True)
@@ -61,15 +62,10 @@ df_scaled["month_sin"] = (df["month_sin"] + 1) / 2  # Scale to [0, 1] range
 df_scaled["month_cos"] = (df["month_cos"] + 1) / 2  # Scale to [0, 1] range
 
 # === Define output directories ===
-scaled_data_dir = f"{prefix}metar_processed"
-model_weights_dir = f"{prefix}model_weights"
-
-# === Create directories if they don't exist ===
-os.makedirs(scaled_data_dir, exist_ok=True)
-os.makedirs(model_weights_dir, exist_ok=True)
+scaled_data_dir = processed_metar_folder
 
 # === Save the scaled data ===
 df_scaled.to_csv(f"{scaled_data_dir}/scaled_metar_for_lstm.csv", index=False)
-joblib.dump(scaler, f"{model_weights_dir}/scaler.save")
+joblib.dump(scaler, f"{scaled_data_dir}/scaler.save")
 
-print(f"Scaling complete. Saved as '{scaled_data_dir}/scaled_metar_for_lstm.csv' and '{model_weights_dir}/scaler.save'")
+print(f"Scaling complete. Saved scaled data as '{scaled_data_dir}/scaled_metar_for_lstm.csv' and scaler as '{scaled_data_dir}/scaler.save'") # Updated print statement
