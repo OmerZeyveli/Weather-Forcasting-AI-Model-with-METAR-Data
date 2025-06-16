@@ -78,11 +78,11 @@ This script will:
 &nbsp;
 
 ## 🖼️ Results
-The following chart shows the normalized mean absolute error (MAE) of the model's predictions, scaled to the [0, 1] range for easier comparison across variables. Wind direction is shown as a fraction of 360°.
+The following chart shows the normalized **mean absolute error (MAE)** of the model's predictions, **scaled to the [0, 1] range**. Wind direction is shown as a fraction of 360°.
 
 ![Normalized MAE Chart](docs/normalized_mae_chart.png)
 
-| Feature         | Normalized MAE |
+| Feature        | Normalized MAE |
 |----------------|----------------|
 | Wind Direction | 0.0383         |
 | Wind Var       | 0.0949         |
