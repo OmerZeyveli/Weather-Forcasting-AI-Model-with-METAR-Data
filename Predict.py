@@ -19,7 +19,7 @@ scaler = joblib.load(f"{model_weights_folder}/scaler.save")
 
 # === Load most recent test input ===
 X_test = np.load(f"{input_splits_folder}/X_test.npy")
-X_input = X_test[-1:]  # shape: (1, 168, 12)
+X_input = X_test[-1:]  # shape: (1, 168, 12), means only 1 set of 7 day input.
 
 # === Predict ===
 y_pred = model.predict(X_input)
