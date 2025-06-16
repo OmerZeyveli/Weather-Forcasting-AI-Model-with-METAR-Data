@@ -19,7 +19,8 @@ demo/
 │   └── raw_metar.csv            # Your input METAR data
 ├── metar_processed/             # Stores parsed & scaled data
 ├── input_splits/                # Train/val/test data splits
-└── model_weights/               # Saved model and scaler
+├── model_weights/               # Saved model and scaler
+└── predict/                     # Temporary data for predicting
 ```
 
 &nbsp;
@@ -54,10 +55,42 @@ bash Train.sh
 This script will:
 
 1. Parse raw METAR reports -> structured CSV
+
 2. Scale (normalize) and encode data
+
 3. Create sequences for LSTM input/output
+
 4. Train the LSTM model
+
 5. Evaluate the model on the test set
+
+&nbsp;
+
+**🔮 Predicting with New Data**
+
+You can use the trained model to generate a 12-hour weather forecast using the most recent 7 days (168 hours) of METAR data.
+```bash 
+bash Predict.sh
+```
+
+This script will:
+
+1. Parse and scale your data
+
+2. Prepare the last valid 168-hour input sequence
+
+3. Run the trained LSTM model
+
+4. Output the predicted weather for the next 12 hours
+
+| Hour | WindDir (°) | Var | WindSpd | Vis (m) | Temp (°C) | DewPt | Pressure (hPa) |
+|------|-------------|-----|---------|---------|------------|--------|----------------|
+| 1    | 22.9        | 0   | 4.86    | 9687    | 8.14       | 1.23   | 1030.20        |
+| 2    | 26.9        | 0   | 4.76    | 9805    | 7.81       | 1.26   | 1030.12        |
+| 3    | 27.7        | 0   | 4.44    | 9768    | 7.08       | 1.22   | 1029.99        |
+|
+|
+| 12   | 22.6        | 0   | 2.93    | 8667    | 2.42       | 1.28   | 1029.47        |
 
 &nbsp;
 
