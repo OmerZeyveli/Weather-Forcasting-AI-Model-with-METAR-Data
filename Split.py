@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 import os
+import sys
 
 
 # === Parameters ===
@@ -9,8 +10,9 @@ input_len = 168       # past n hours
 output_len = 12       # predict next m hours
 test_ratio = 0.2     # 20% for testing
 val_ratio = 0.1      # 10% of train set for validation
-data_path = "demo/metar_processed/scaled_metar_for_lstm.csv"
-output_dir = "demo/input_splits"
+prefix = sys.argv[1] # Get prefix from command line
+data_path = f"{prefix}metar_processed/scaled_metar_for_lstm.csv"
+output_dir = f"{prefix}input_splits"
 
 
 # === Load Scaled Data ===

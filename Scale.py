@@ -4,9 +4,11 @@ from sklearn.preprocessing import MinMaxScaler
 import joblib
 import numpy as np
 import os
+import sys
 
 # === Load your processed METAR file ===
-df = pd.read_csv("demo/metar_processed/processed_metar_for_lstm.csv", parse_dates=["datetime"])
+prefix = sys.argv[1] # Get prefix from command line
+df = pd.read_csv(f"{prefix}metar_processed/processed_metar_for_lstm.csv", parse_dates=["datetime"])
 
 # === Sort by datetime (just in case) ===
 df = df.sort_values("datetime").reset_index(drop=True)
@@ -59,8 +61,8 @@ df_scaled["month_sin"] = (df["month_sin"] + 1) / 2  # Scale to [0, 1] range
 df_scaled["month_cos"] = (df["month_cos"] + 1) / 2  # Scale to [0, 1] range
 
 # === Define output directories ===
-scaled_data_dir = "demo/metar_processed"
-model_weights_dir = "demo/model_weights"
+scaled_data_dir = f"{prefix}metar_processed"
+model_weights_dir = f"{prefix}model_weights"
 
 # === Create directories if they don't exist ===
 os.makedirs(scaled_data_dir, exist_ok=True)

@@ -2,14 +2,16 @@ from sklearn.metrics import mean_absolute_error
 from tensorflow.keras.models import load_model
 import numpy as np
 import joblib
+import sys
 
 def reconstruct_deg(sin_val, cos_val):
     angle = np.arctan2(sin_val, cos_val) * 180 / np.pi
     return np.mod(angle, 360)
 
-model = load_model("demo/model_weights/lstm_weather_model.keras")
-X_test = np.load("demo/input_splits/X_test.npy")
-y_test = np.load("demo/input_splits/y_test.npy")
+prefix = sys.argv[1] # Get prefix from command line
+model = load_model(f"{prefix}model_weights/lstm_weather_model.keras")
+X_test = np.load(f"{prefix}input_splits/X_test.npy")
+y_test = np.load(f"{prefix}input_splits/y_test.npy")
 
 y_pred = model.predict(X_test)
 
@@ -20,7 +22,7 @@ n_features = 8
 y_pred = y_pred.reshape((n_samples, n_outputs, n_features))
 y_test = y_test.reshape((n_samples, n_outputs, n_features))
 
-scaler = joblib.load("demo/model_weights/scaler.save")
+scaler = joblib.load(f"{prefix}model_weights/scaler.save")
 
 # Inverse transform only the scaled part (first 6 features)
 y_pred_scaled = scaler.inverse_transform(y_pred[:, :, 2:8].reshape(-1, 6)).reshape(n_samples, n_outputs, 6)

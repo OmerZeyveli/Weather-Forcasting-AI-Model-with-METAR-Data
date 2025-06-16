@@ -3,13 +3,15 @@ from tensorflow.keras.models import load_model
 import tensorflow as tf
 import numpy as np
 import os
+import sys
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
 from tensorflow.keras.callbacks import EarlyStopping
 
 
 # === Load Data ===
-data_path = "demo/input_splits/"
+prefix = sys.argv[1]  # Get prefix from command line
+data_path = f"{prefix}input_splits/"
 
 X_train = np.load(f"{data_path}/X_train.npy")
 X_val = np.load(f"{data_path}/X_val.npy")
@@ -49,7 +51,7 @@ history = model.fit(
 
 
 # === Save Model ===
-model_output_dir = "demo/model_weights"
+model_output_dir = f"{prefix}model_weights"
 os.makedirs(model_output_dir, exist_ok=True)
 model.save(f"{model_output_dir}/lstm_weather_model.keras")
 
