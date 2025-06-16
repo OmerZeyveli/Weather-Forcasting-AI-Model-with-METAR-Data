@@ -14,3 +14,4 @@ python Train.py ${prefix}
 
 # If you only want to test the model, you can comment out the Train and other steps
 python Test.py ${prefix}
+python Test_Scaled.py ${prefix}
