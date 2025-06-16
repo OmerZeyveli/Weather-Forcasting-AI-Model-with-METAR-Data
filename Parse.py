@@ -1,9 +1,10 @@
 import pandas as pd
 from metar import Metar
 import numpy as np
+import os
 
 # Load your CSV
-df = pd.read_csv("demo/data/LTBU_withnulls.csv")
+df = pd.read_csv("demo/metar_raw/LTBU_withnulls.csv")
 
 # Storage for processed rows
 parsed_data = []
@@ -60,5 +61,7 @@ df_parsed = pd.DataFrame(parsed_data)
 df_parsed = df_parsed.sort_values("datetime").reset_index(drop=True)
 
 # Save to CSV
-df_parsed.to_csv("demo/data/processed_metar_for_lstm.csv", index=False)
+output_dir = "demo/metar_processed"
+os.makedirs(output_dir, exist_ok=True)
+df_parsed.to_csv(f"{output_dir}/processed_metar_for_lstm.csv", index=False)
 print(df_parsed.head())

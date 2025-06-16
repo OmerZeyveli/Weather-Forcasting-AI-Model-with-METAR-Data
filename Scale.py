@@ -3,9 +3,10 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 import joblib
 import numpy as np
+import os
 
 # === Load your processed METAR file ===
-df = pd.read_csv("demo/data/processed_metar_for_lstm.csv", parse_dates=["datetime"])
+df = pd.read_csv("demo/metar_processed/processed_metar_for_lstm.csv", parse_dates=["datetime"])
 
 # === Sort by datetime (just in case) ===
 df = df.sort_values("datetime").reset_index(drop=True)
@@ -49,8 +50,16 @@ df_scaled["month_cos"] = df["month_cos"]
 
 df_scaled["datetime"] = df["datetime"]
 
-# === Save the scaled data ===
-df_scaled.to_csv("demo/input/scaled_metar_for_lstm.csv", index=False)
-joblib.dump(scaler, "demo/input/scaler.save")
+# === Define output directories ===
+scaled_data_dir = "demo/metar_processed"
+model_weights_dir = "demo/model_weights"
 
-print("Scaling complete. Saved as 'scaled_metar_for_lstm.csv' and 'scaler.save'")
+# === Create directories if they don't exist ===
+os.makedirs(scaled_data_dir, exist_ok=True)
+os.makedirs(model_weights_dir, exist_ok=True)
+
+# === Save the scaled data ===
+df_scaled.to_csv(f"{scaled_data_dir}/scaled_metar_for_lstm.csv", index=False)
+joblib.dump(scaler, f"{model_weights_dir}/scaler.save")
+
+print(f"Scaling complete. Saved as '{scaled_data_dir}/scaled_metar_for_lstm.csv' and '{model_weights_dir}/scaler.save'")

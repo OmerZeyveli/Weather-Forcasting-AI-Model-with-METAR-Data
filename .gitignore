@@ -1,1 +1,9 @@
-demo/
+# Ignore everything in demo/
+demo/*
+
+# But keep these 5 folders
+!demo/folder1/
+!demo/folder2/
+!demo/folder3/
+!demo/folder4/
+!demo/folder5/
