@@ -6,7 +6,7 @@ import sys
 
 # Load your CSV
 prefix = sys.argv[1]  # Get prefix from command line
-df = pd.read_csv(f"{prefix}metar_raw/LTBU_withnulls.csv")
+df = pd.read_csv(f"{prefix}metar_raw/raw_metar.csv") # Expecting a file with nulls as empty data
 
 # Storage for processed rows
 parsed_data = []

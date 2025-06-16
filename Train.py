@@ -19,14 +19,7 @@ y_train = np.load(f"{data_path}/y_train.npy")
 y_val = np.load(f"{data_path}/y_val.npy")
 
 
-# === Build the model ===
-
-# model = Sequential([
-#     LSTM(64, return_sequences=False, input_shape=(X_train.shape[1], X_train.shape[2])),
-#     Dropout(0.2),
-#     Dense(y_train.shape[1])  # Predict all 9 features
-# ])
-
+# === Build & Train the model ===
 model = Sequential([
     LSTM(128, return_sequences=True, input_shape=(X_train.shape[1], X_train.shape[2])),
     Dropout(0.3),
@@ -57,6 +50,7 @@ model.save(f"{model_output_dir}/lstm_weather_model.keras")
 
 
 # === Evaluate on Validation Set ===
+# You can comment this out if you don't want to see validation performance
 y_pred = model.predict(X_val)
 y_pred = y_pred.reshape((-1, 12, 8))
 y_val = y_val.reshape((-1, 12, 8))
