@@ -1,9 +1,16 @@
 # Ignore everything in demo/
 demo/*
 
-# But keep these 5 folders
-!demo/folder1/
-!demo/folder2/
-!demo/folder3/
-!demo/folder4/
-!demo/folder5/
+# Except these folders (keep the folders themselves, but not their content)
+!demo/input_splits/
+!demo/metar_processed/
+!demo/metar_raw/
+!demo/model_weights/
+!demo/validation_imgs/
+
+# Ignore everything inside those folders
+demo/input_splits/**
+demo/metar_processed/**
+demo/metar_raw/**
+demo/model_weights/**
+demo/validation_imgs/**
