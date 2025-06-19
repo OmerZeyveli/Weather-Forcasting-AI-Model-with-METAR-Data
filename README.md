@@ -129,3 +129,7 @@ The following chart shows the normalized **mean absolute error (MAE)** of the mo
 
 ## 📬 Contact
 Questions or suggestions? Feel free to open an issue or contribute via pull request.
+
+&nbsp;
+
+## ⭐ Star if you find it useful!
